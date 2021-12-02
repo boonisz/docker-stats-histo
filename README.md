@@ -26,25 +26,13 @@ python --version
 deactivate
 ```
 
-Configure the stats export
---------------------------
-Open the cron tab in edition mode:
+Export stats
+------------
 ```bash
-crontab -e
+./save_docker_stats.sh
+or
+python save_docker_stats.py
 ```
-
-Then add a new line (to run the check each 10 minutes)
-```bash
-*/10 * * * * /path/to/docker-stats-histo/save_docker_stats.sh > /dev/null  2>&1
-```
-
-
-**Note:**
- - Normally cron send task outputs (echo) via mail. As the MTA (Mail Transfer Agent),
-may not be set up, the crontab line redirect the outputs into `/dev/null`.
-It can also be a path to a log file.
- - No sudo is needed, crontab is called with current user.
-
 
 Display stats
 -------------
@@ -55,6 +43,27 @@ It is simple, just run:
 ```
 
 The report is now accessible in `stats.html`.
+
+
+Automations using cron
+----------------------
+Open the cron tab in edition mode:
+```bash
+crontab -e
+```
+
+Then add those lines (to run the check each 10 minutes and a html generation each hour)
+```bash
+*/10 * * * * /path/to/docker-stats-histo/save_docker_stats.sh > /dev/null  2>&1
+00 */1 * * * /path/to/docker-stats-histo/generate_html.sh > /dev/null  2>&1
+```
+
+
+**Note:**
+ - Normally cron send task outputs (echo) via mail. As the MTA (Mail Transfer Agent),
+may not be set up, the crontab line redirect the outputs into `/dev/null`.
+It can also be a path to a log file.
+ - No sudo is needed, crontab is called with current user.
 
 
 Advanced parameters
